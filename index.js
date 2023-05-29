@@ -41,6 +41,24 @@ async function scrapeWebsite(url) {
   await browser.close();
 }
 
+async function checkWebsiteCookies(url) {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.goto(url);
+
+  // Retrieve the current page's cookies
+  const cookies = await page.cookies();
+
+  console.log("Website Cookies:");
+  if (cookies.length > 0) {
+    console.log(cookies);
+  } else {
+    console.log("No cookies found.");
+  }
+
+  await browser.close();
+}
+
 async function scanForLinks(url) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -207,7 +225,7 @@ rl.question(
       rl.question("Enter a URL: ", async (url) => {
         console.log("What would you like to do?");
         console.log("1. Scrape the website");
-        console.log("2. Get website information");
+        console.log("2. Check if website is using cookies");
         console.log("3. Get links on the website");
         console.log("4. Get website CSS");
         console.log("5. Get existing images");
@@ -224,7 +242,7 @@ rl.question(
             }
           } else if (actionChoice === "2") {
             try {
-              await getInformation(url);
+              await checkWebsiteCookies(url);
             } catch (error) {
               console.error(error);
             }
